@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  mysql:
+    container_name: mysql
+    platform: linux/x86_64
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/log:/var/log/mysql
+      - ./mysql/conf/mysqld.conf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: hackerpassword
+      MYSQL_DATABASE: x
+      MYSQL_PASSWORD: xpassword
+    networks:
+      - mysql-phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    restart: always
+    ports:
+      - 8090:80
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: 'root'
+      PMA_PASSWORD: hackerpassword
+      MYSQL_ROOT_PASSWORD: hackerpassword
+    networks:
+      - mysql-phpmyadmin
+    links:
+      - mysql
+  redis:
+    image: 'redis:3.2.11'
+    restart: always
+    hostname: redis
+    container_name: redis
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass hackerpassword
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "hacker"
+      RABBITMQ_DEFAULT_PASS: "hackerpassword"
+    ports:
+      - "5672:5672"
+      - "15672:15672"  
+networks:
+  mysql-phpmyadmin:
