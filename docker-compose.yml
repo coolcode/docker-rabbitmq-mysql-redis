@@ -5,7 +5,7 @@ services:
     container_name: mysql
     platform: linux/x86_64
     image: mysql:5.7
-    restart: always
+    # restart: always
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/log:/var/log/mysql
@@ -20,7 +20,7 @@ services:
       - mysql-phpmyadmin
   phpmyadmin:
     image: phpmyadmin:5.2.1
-    restart: always
+    # restart: always
     ports:
       - 8090:80
     environment:
@@ -35,7 +35,7 @@ services:
       - mysql
   redis:
     image: 'redis:3.2.11'
-    restart: always
+    # restart: always
     hostname: redis
     container_name: redis
     ports:
@@ -43,7 +43,7 @@ services:
     command: redis-server --requirepass hackerpassword
   rabbitmq:
     image: rabbitmq:3-management
-    restart: always
+    # restart: always
     container_name: rabbitmq
     hostname: rabbitmq
     environment:
